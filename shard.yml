@@ -1,0 +1,12 @@
+name: drive_processer
+version: 0.1.0
+
+dependencies:
+  amqp-client:
+    github: cloudamqp/amqp-client.cr
+
+  avram:
+    github: luckyframework/avram
+
+  lucky_env:
+    github: luckyframework/lucky_env
