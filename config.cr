@@ -7,6 +7,7 @@ require "avram"
 require "./config/**"
 require "./rabbit_mq/**"
 
-require "./generators/**"
 require "./models/**"
+require "./queries/**"
+require "./generators/**"
 require "./processers/**"
