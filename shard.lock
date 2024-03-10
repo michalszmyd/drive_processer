@@ -12,6 +12,14 @@ shards:
     git: https://github.com/luckyframework/avram.git
     version: 1.1.1
 
+  awscr-s3:
+    git: https://github.com/taylorfinnell/awscr-s3.git
+    version: 0.8.3
+
+  awscr-signer:
+    git: https://github.com/taylorfinnell/awscr-signer.git
+    version: 0.8.2
+
   cadmium_transliterator:
     git: https://github.com/cadmiumcr/transliterator.git
     version: 0.1.0+git.commit.46c4c14594057dbcfaf27e7e7c8c164d3f0ce3f1

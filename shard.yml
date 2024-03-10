@@ -10,3 +10,6 @@ dependencies:
 
   lucky_env:
     github: luckyframework/lucky_env
+
+  awscr-s3:
+    github: taylorfinnell/awscr-s3
