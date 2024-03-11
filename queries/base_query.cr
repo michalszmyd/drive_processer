@@ -10,15 +10,16 @@ class BaseQuery(T)
     property column_condition : String
     property value : WhereConditionType? = nil
     property input_type : Symbol
+    property compare : String = "="
 
-    def initialize(@column_condition, @value, @input_type)
+    def initialize(@column_condition, @value, @input_type, @compare)
     end
 
     def to_query(number : Int32? = 1)
-      arg_v = "$#{number}"
+      arg_v = value.nil? ? "NULL" : "$#{number}"
 
       if input_type == :pretty
-        "#{column_condition} = #{arg_v}"
+        "#{column_condition} #{compare} #{arg_v}"
       else
         "#{column_condition.gsub("?", arg_v)}"
       end
@@ -28,11 +29,14 @@ class BaseQuery(T)
   getter select_clause : String = "*"
   getter from_clause : String
 
+  @limit_value : Int32?
+
   def initialize(
     @select_clause : String?,
     @from_clause : String,
   )
     @where_conditions = [] of WhereCondition
+    @limit_value = nil
   end
 
   def find(id)
@@ -47,15 +51,51 @@ class BaseQuery(T)
     results[0]
   end
 
-  def where(value : Hash | String, args : (Array(WhereConditionType))? = [] of Int32)
+  def limit(value : Int32)
+    @limit_value = value
+
+    self
+  end
+
+  def where_not(value : Hash | String, args : (Array(WhereConditionType))? = [] of Int32)
+    where(value, args, compare: "!=")
+  end
+
+  def where_nil(value : String)
+    @where_conditions.push(
+      WhereCondition.new(
+        column_condition: value,
+        value: nil,
+        input_type: :pretty,
+        compare: "IS"
+      )
+    )
+
+    self
+  end
+
+  def where_not_nil(value : String)
+    @where_conditions.push(
+      WhereCondition.new(
+        column_condition: value,
+        value: nil,
+        input_type: :pretty,
+        compare: "IS NOT"
+      )
+    )
+
+    self
+  end
+
+  def where(value : Hash | String, args : (Array(WhereConditionType))? = [] of Int32, compare : String = "=")
     if value.is_a?(Hash)
       value.keys.each do |key|
-        @where_conditions.push(WhereCondition.new(column_condition: key, value: value[key], input_type: :pretty))
+        @where_conditions.push(WhereCondition.new(column_condition: key, value: value[key], input_type: :pretty, compare: compare))
       end
     else
       raise "Args are empty" if args.empty?
 
-      @where_conditions.push WhereCondition.new(column_condition: value, value: args[0], input_type: :standard)
+      @where_conditions.push WhereCondition.new(column_condition: value, value: args[0], input_type: :standard, compare: compare)
     end
 
     self
@@ -66,23 +106,32 @@ class BaseQuery(T)
   end
 
   def results
+    params = execute_params
+
+    Logger.log("Executing #{params[:sql].inspect} with args: #{params[:args].inspect}")
+
+    AppDatabase.query_all(params[:sql], args: params[:args], as: T)
+  end
+
+  def execute_params
     args = [] of WhereConditionType
+    index_of_where_parameter = 0
 
     where_condition = @where_conditions.map_with_index do |where, index|
-      args.push(where.value)
-      where.to_query(index + 1)
+      if where.value.nil?
+        where.to_query
+      else
+        args.push(where.value)
+        where.to_query(index_of_where_parameter += 1)
+      end
     end.join(" AND ")
 
     where_clause = where_condition.blank? ? "" : "WHERE #{where_condition}"
+    limit = @limit_value ? "LIMIT #{@limit_value}" : ""
 
-    raw = "
-      SELECT #{select_clause}
-      FROM #{from_clause}
-      #{where_clause}
-    "
-
-    puts("Executing #{raw.inspect} with args: #{args.inspect}")
-
-    AppDatabase.query_all(raw, args: args, as: T)
+    {
+      sql:"SELECT #{select_clause} FROM #{from_clause} #{where_clause} #{limit}",
+      args: args
+    }
   end
 end
