@@ -7,7 +7,7 @@ module Jobs
         folder = FolderQuery.new.find(folder_id)
 
         ::Folders::ZipFolderGenerator.new(folder).to_zip do |filename, filepath|
-          puts("#{filename}, #{filepath}")
+          Logger.log("#{filename}, #{filepath}")
         end
       end
     end

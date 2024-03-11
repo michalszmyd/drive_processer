@@ -26,31 +26,18 @@ module S3
               uploaded_file = S3::UploadFile.new(name: origin_filename, attachment: tempfile).upload_file do |uploaded_file|
                 source = uploaded_file.presigned_source
 
-                AppDatabase.exec("
-                  UPDATE drive_files
-                    SET
-                      legacy_external_storage_id = $2,
-                      legacy_source_url = $3,
-                      file_name = $4,
-                      name = $5,
-                      external_storage_id = $6,
-                      hosting_source = $7,
-                      source_url = $8,
-                      source_signature_duration = $9,
-                      source_signature_created_at = $10
-                    WHERE id = $1
-                ",
-                  drive_file.id,
-                  storage_id,
-                  source_url,
-                  origin_filename,
-                  drive_file.name,
-                  uploaded_file.id,
-                  ::DriveFile::FileHosting::AmazonS3.value,
-                  source.url,
-                  source.expires,
-                  source.created_at
-                )
+                UpdateQuery
+                  .new("drive_files", drive_file.id)
+                  .set("legacy_external_storage_id", storage_id)
+                  .set("legacy_source_url", source_url)
+                  .set("file_name", origin_filename)
+                  .set("name", drive_file.name)
+                  .set("external_storage_id", uploaded_file.id)
+                  .set("hosting_source", ::DriveFile::FileHosting::AmazonS3.value)
+                  .set("source_url", source.url)
+                  .set("source_signature_duration", source.expires)
+                  .set("source_signature_created_at", source.created_at)
+                  .commit
 
                 Logger.log("Migrated: #{drive_file.id}")
               end

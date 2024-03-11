@@ -11,15 +11,10 @@ module DriveFiles
         .where_not({"hosting_source" => DriveFile::FileHosting::Discord.value})
         .results
         .each do |drive_file|
-          AppDatabase.exec("
-            UPDATE drive_files
-              SET
-                hosting_source = $2
-              WHERE id = $1
-          ",
-            drive_file.id,
-            DriveFile::FileHosting::Discord.value
-          )
+          UpdateQuery
+            .new("drive_files", drive_file.id)
+            .set("hosting_source", DriveFile::FileHosting::Discord.value)
+            .commit
 
           Logger.log("Updated source for #{drive_file.id}")
         end
