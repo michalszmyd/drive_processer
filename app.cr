@@ -1,5 +1,6 @@
 require "./config"
 
+Logger.init
 RabbitMQ::Listener.new.subscribe do |message|
   Processers::Perform.new(
     payload: message.body_io.to_s,
