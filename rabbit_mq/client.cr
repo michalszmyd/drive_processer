@@ -9,7 +9,7 @@ module RabbitMQ
     def subscribe(&block : AMQP::Client::DeliverMessage -> _)
       subscribe_queue do |queue|
         queue.subscribe(block: true, no_ack: false, args: AMQP::Client::Arguments.new({"x-stream-offset": "first"})) do |msg|
-          puts "Received: #{msg.routing_key} - #{msg.body_io} #{msg.body_io.class}"
+          Logger.log "Received: #{msg.routing_key} - #{msg.body_io} #{msg.body_io.class}"
 
           block.call(msg)
 
@@ -24,7 +24,7 @@ module RabbitMQ
           channel.prefetch(10)
           queue = channel.queue(QUEUE_NAME, args: AMQP::Client::Arguments.new({"x-queue-type": QUEUE_TYPE}))
 
-          puts "Waiting for messages. To exit press CTRL+C"
+          Logger.log "Waiting for #{QUEUE_NAME} messages. To exit press CTRL+C"
 
           yield queue
         end
