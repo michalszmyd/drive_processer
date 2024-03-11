@@ -8,7 +8,7 @@ module DriveFiles
         .new
         .where_not_nil("source_url")
         .where("source_url ILIKE ?", ["%discord%"])
-        .where_not({"hosting_source" => DriveFile::FileHosting::Discord.value})
+        .where_nil("hosting_source")
         .results
         .each do |drive_file|
           UpdateQuery
