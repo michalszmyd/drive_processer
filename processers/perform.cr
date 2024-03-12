@@ -5,14 +5,15 @@ module Processers
       "migrate_folder" => Jobs::S3::MigrateFolder,
       "migrate_file" => Jobs::S3::MigrateFile,
       "migrate_all" => Jobs::S3::Migrate,
-      "resolve_files_hosting" => Jobs::DriveFiles::ResolveFilesHosting
+      "resolve_files_hosting" => Jobs::DriveFiles::ResolveFilesHosting,
+      "send_discord_random_file_message" => Jobs::Discord::SendRandomFileMessage
     }
 
     getter payload : String
     getter routing_key : String
 
     def initialize(@payload, @routing_key)
-      Logger.log("Received #{routing_key} with #{payload}")
+      Logger.log("Performing #{routing_key} with #{payload}")
     end
 
     def resolve
