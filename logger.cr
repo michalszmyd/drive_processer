@@ -18,7 +18,8 @@ class Logger
 
     info = "[#{time}]: #{value}"
 
-    puts(info)
+    puts(info) unless Env.production?
+
     File.open(path, "ab+") do |file|
       file.puts info
     end
