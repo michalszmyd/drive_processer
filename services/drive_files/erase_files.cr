@@ -8,7 +8,7 @@ module DriveFiles
     def call
       DriveFileQuery
         .new
-        .where_not_nil("deleted_at")
+        .deletable
         .where("deleted_at < ?", [Time.utc - resolve_days])
         .each do |drive_file|
           EraseFile.new(drive_file).call

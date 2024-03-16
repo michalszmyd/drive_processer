@@ -8,6 +8,5 @@ class DriveFileQuery < BaseQuery(DriveFile)
 
   def deletable
     where_not_nil("deleted_at")
-      .where("deleted_at > ?", [Time.utc - 7.days])
   end
 end
