@@ -12,7 +12,7 @@ class DriveFile
     source_url: String?,
     body: String?,
     external_storage_id: String?,
-    archived: Bool,
+    deleted_at: Time?,
     pinned: Bool,
     vibrant_color: String?,
     folder_id: Int64?,

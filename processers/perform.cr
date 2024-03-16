@@ -6,7 +6,9 @@ module Processers
       "migrate_file" => Jobs::S3::MigrateFile,
       "migrate_all" => Jobs::S3::Migrate,
       "resolve_files_hosting" => Jobs::DriveFiles::ResolveFilesHosting,
-      "send_discord_random_file_message" => Jobs::Discord::SendRandomFileMessage
+      "send_discord_random_file_message" => Jobs::Discord::SendRandomFileMessage,
+      "erase_file" => Jobs::DriveFiles::EraseFile,
+      "erase_files" => Jobs::DriveFiles::EraseFiles
     }
 
     getter payload : String
@@ -26,6 +28,8 @@ module Processers
       else
         Logger.log("Incorrect action: #{@routing_key}")
       end
+    rescue e : BaseQuery::RecordNotFound
+      Logger.log("[ERROR]: #{e.inspect}: #{e.message}")
     end
   end
 end

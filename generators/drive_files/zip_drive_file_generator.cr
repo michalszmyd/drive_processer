@@ -48,7 +48,7 @@ module DriveFiles
         source_url: drive_file.source_url,
         body: drive_file.body,
         external_storage_id: drive_file.external_storage_id,
-        archived: drive_file.archived,
+        deleted_at: drive_file.deleted_at,
         pinned: drive_file.pinned,
         vibrant_color: drive_file.vibrant_color,
         user_id: drive_file.user_id,

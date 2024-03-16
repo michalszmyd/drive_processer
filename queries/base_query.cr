@@ -4,7 +4,7 @@ class BaseQuery(T)
   class RecordNotFound < Exception
   end
 
-  alias WhereConditionType = String | Int32 | Int64 | Bool | Nil
+  alias WhereConditionType = String | Int32 | Int64 | Bool | Nil | Time
 
   struct WhereCondition
     property column_condition : String
@@ -48,7 +48,7 @@ class BaseQuery(T)
   end
 
   def first?
-    results[0]
+    results[0]?
   end
 
   def limit(value : Int32)
