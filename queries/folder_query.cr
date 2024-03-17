@@ -1,4 +1,4 @@
-class FolderQuery < BaseQuery(Folder)
+class FolderQuery < Azurite::BaseQuery(Folder)
   def initialize
     super(
       from_clause: "folders",

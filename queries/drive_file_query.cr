@@ -1,4 +1,4 @@
-class DriveFileQuery < BaseQuery(DriveFile)
+class DriveFileQuery < Azurite::BaseQuery(DriveFile)
   def initialize
     super(
       from_clause: "drive_files",

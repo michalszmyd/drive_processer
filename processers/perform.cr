@@ -28,7 +28,7 @@ module Processers
       else
         Logger.log("Incorrect action: #{@routing_key}")
       end
-    rescue e : BaseQuery::RecordNotFound
+    rescue e : Azurite::BaseQuery::RecordNotFound
       Logger.log("[ERROR]: #{e.inspect}: #{e.message}")
     end
   end
