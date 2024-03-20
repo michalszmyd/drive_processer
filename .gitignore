@@ -5,3 +5,4 @@ uploads
 logs/
 app
 console.cr
+.vscode

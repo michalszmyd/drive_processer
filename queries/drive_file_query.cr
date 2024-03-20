@@ -1,7 +1,8 @@
 class DriveFileQuery < Azurite::BaseQuery(DriveFile)
+  table_name "drive_files"
+
   def initialize
     super(
-      from_clause: "drive_files",
       select_clause: "*"
     )
   end

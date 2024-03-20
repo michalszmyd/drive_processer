@@ -1,7 +1,8 @@
 class FolderQuery < Azurite::BaseQuery(Folder)
+  table_name "folders"
+
   def initialize
     super(
-      from_clause: "folders",
       select_clause: "*"
     )
   end
