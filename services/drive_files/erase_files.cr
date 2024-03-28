@@ -10,9 +10,9 @@ module DriveFiles
         .new
         .deletable
         .where("deleted_at < ?", [Time.utc - resolve_days])
+        .results
         .each do |drive_file|
           EraseFile.new(drive_file).call
-          drive_file
         end
     end
 

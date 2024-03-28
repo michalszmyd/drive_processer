@@ -1,5 +1,5 @@
 module Jobs
-  class Folders
+  module Folders
     class ExportFolder < BaseJob
       def perform
         folder_id = data["id"].as_i
