@@ -1,16 +1,17 @@
 module Processers
   class Perform
     RESOLVE_CLASSES = {
-      "export_folder" => Jobs::Folders::ExportFolder,
-      "migrate_folder" => Jobs::S3::MigrateFolder,
-      "migrate_file" => Jobs::S3::MigrateFile,
-      "migrate_all" => Jobs::S3::Migrate,
-      "resolve_files_hosting" => Jobs::DriveFiles::ResolveFilesHosting,
-      "send_discord_random_file_message" => Jobs::Discord::SendRandomFileMessage,
-      "erase_file" => Jobs::DriveFiles::EraseFile,
-      "erase_files" => Jobs::DriveFiles::EraseFiles,
-      "folder_drive_files_count_cache" => Jobs::Folders::DriveFilesCountCache,
+      "export_folder"                         => Jobs::Folders::ExportFolder,
+      "migrate_folder"                        => Jobs::S3::MigrateFolder,
+      "migrate_file"                          => Jobs::S3::MigrateFile,
+      "migrate_all"                           => Jobs::S3::Migrate,
+      "resolve_files_hosting"                 => Jobs::DriveFiles::ResolveFilesHosting,
+      "send_discord_random_file_message"      => Jobs::Discord::SendRandomFileMessage,
+      "erase_file"                            => Jobs::DriveFiles::EraseFile,
+      "erase_files"                           => Jobs::DriveFiles::EraseFiles,
+      "folder_drive_files_count_cache"        => Jobs::Folders::DriveFilesCountCache,
       "resync_folder_drive_files_count_cache" => Jobs::Folders::ResyncDriveFilesCountCache,
+      "file_text_data_result"                 => Jobs::DriveFiles::FileTextDataResult,
     }
 
     getter payload : String
