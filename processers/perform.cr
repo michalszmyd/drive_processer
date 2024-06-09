@@ -12,6 +12,7 @@ module Processers
       "folder_drive_files_count_cache"        => Jobs::Folders::DriveFilesCountCache,
       "resync_folder_drive_files_count_cache" => Jobs::Folders::ResyncDriveFilesCountCache,
       "file_text_data_result"                 => Jobs::DriveFiles::FileTextDataResult,
+      "reload_fts_materialized_view"          => Jobs::DB::ReloadFtsMaterializedView,
     }
 
     getter payload : String
