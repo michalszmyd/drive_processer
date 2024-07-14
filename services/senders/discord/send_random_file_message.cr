@@ -4,6 +4,8 @@ module Senders
       getter discord_channel_id : String
       getter folder_id : Int32
 
+      HOST_APP_URL = ENV["HOST_APP_URL"]
+
       def initialize(@discord_channel_id, @folder_id)
       end
 
@@ -12,13 +14,17 @@ module Senders
         drive_file = drive_files.sample
         external_storage_id = drive_file.external_storage_id
 
-        source_url = external_storage_id ? S3::File.new(external_storage_id).presigned_source.url : ""
+        DriveFiles::Share::Write.new(drive_file).call do |payload|
+          url = "#{HOST_APP_URL}/files/embed?#{payload.to_url_params}"
 
-        ::Discord::API::Messages.create(
-          content: source_url,
-          channel_id: discord_channel_id
-        ) do |message|
-          Logger.log("Pushed to discord #{discord_channel_id}: #{message.inspect}")
+          Logger.log(url.inspect)
+
+          ::Discord::API::Messages.create(
+            content: url,
+            channel_id: discord_channel_id
+          ) do |message|
+            Logger.log("Pushed to discord #{discord_channel_id}: #{message.inspect}")
+          end
         end
       end
     end
