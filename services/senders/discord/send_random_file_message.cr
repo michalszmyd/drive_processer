@@ -16,11 +16,10 @@ module Senders
 
         DriveFiles::Share::Write.new(drive_file).call do |payload|
           url = "#{HOST_APP_URL}/files/embed?#{payload.to_url_params}"
-
-          Logger.log(url.inspect)
+          message = "[#{drive_file.name}](#{url})"
 
           ::Discord::API::Messages.create(
-            content: url,
+            content: message,
             channel_id: discord_channel_id
           ) do |message|
             Logger.log("Pushed to discord #{discord_channel_id}: #{message.inspect}")
